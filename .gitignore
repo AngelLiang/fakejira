@@ -12,3 +12,6 @@ junit-*.xml
 .coverage
 docs/_*
 dist
+
+.vscode/
+.venv/
