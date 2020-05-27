@@ -9,7 +9,9 @@ from base.models import Ticket
 
 
 def create_river_button(obj, transition_approval):
-    approve_ticket_url = reverse('approve_ticket', kwargs={'ticket_id': obj.pk, 'next_state_id': transition_approval.transition.destination_state.pk})
+    """创建river按钮"""
+    approve_ticket_url = reverse('approve_ticket', kwargs={
+                                 'ticket_id': obj.pk, 'next_state_id': transition_approval.transition.destination_state.pk})
     return f"""
         <input
             type="button"
@@ -24,11 +26,12 @@ class TicketAdmin(admin.ModelAdmin):
     list_display = ('no', 'subject', 'description', 'status', 'river_actions')
 
     def get_list_display(self, request):
-        self.user = request.user
+        self.user = request.user  # 获取当前用户
         return super(TicketAdmin, self).get_list_display(request)
 
     def river_actions(self, obj):
         content = ""
+        # 遍历
         for transition_approval in obj.river.status.get_available_approvals(as_user=self.user):
             content += create_river_button(obj, transition_approval)
 
